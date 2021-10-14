@@ -1,65 +1,44 @@
-// const person = {
-//   name: 'Maximilian',
-//   age: 30
-// };
-
-// same as 
-// const person: {name: string, age: number} = {
-//   name: 'Maximilian',
-//   age: 30
-// };
-
-//better just this
-// const person: {
-//   name: string,
-//   age: number,
-//   hobbies: string[],
-//   role: [number, string] //tuple
-// } = {
-//   name: 'Maximilian',
-//   age: 30,
-//   hobbies: ['reading', "walking"],
-//   role: [2, 'author'] //tuple -> exact 2 elements
-// };
-
-// console.log(person.name);
-
-// for (const hobby of person.hobbies) {
-//   console.log(hobby)
-// }
-
-// for (const r of person.role) {
-//   console.log(r)
-// }
-
-//ENUM
-enum Role {ADMIN, READ_ONLY, AUTHOR};
-
-const person = {
-  name: 'Maximilian',
-  age: 30,
-  hobbies: ['reading', "walking"],
-  role: Role.ADMIN
-};
-
-if (person.role === Role.ADMIN) {
-  console.log("is admin")
-  console.log(Role.ADMIN)
+function add(n1: number, n2: number) {
+  return n1 + n2;
 }
 
-//UNION TYPES
-function combine (input1 : number | string, input2: number | string) {
-  let result;
-  if (typeof input1 === 'number' && typeof input2 === "number") {
-    result = input1 + input2;
-  } else {
-    result = input1.toString() + input2.toString();
-  }
-  return result;
+//function type
+let combineValue: (a:number, b:number) => number; //return type of Function
+combineValue = add;
+
+console.log(combineValue(8,8));
+
+
+//call back function
+function printResult (num : number): void {
+  console.log("Result: " + num);
 }
 
-const combineAge = combine(10, 12);
-console.log(combineAge)
+function addAndPrint(n1: number, n2: number, callback: (result: number) => void) {
+  const result = n1 + n2;
+  callback(result);
+}
 
-const combineName = combine("Hai-Au ", 'Bui');
-console.log(combineName)
+addAndPrint(10, 20, (result) => {
+  console.log(result);
+})
+
+
+//UNKNOWN TYPE
+let userInput: unknown; //unknow diff than any
+let userName: string;
+
+userInput = 5;
+userInput = 'Max';
+if (typeof userInput === 'string') {
+  userName = userInput;
+}
+
+
+//NEVER TYPE -> never return anything
+function generateError(message: string, code: number) : never{
+  throw {message: message, errorCode: code};
+}
+
+const result = generateError('An error occurred!', 500);
+console.log(result);
