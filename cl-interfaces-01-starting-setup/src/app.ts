@@ -1,5 +1,5 @@
 // Code goes here!
-class Department {
+abstract class Department {
   //private name: string;
   protected employees: string[] = [];
   //private readonly id: string; //cannot change after initilize
@@ -9,18 +9,20 @@ class Department {
   // }
 
   //shortcut contructor and initilize, there is no nee line 3
-  constructor(private readonly id: string, private name: string) {
+  constructor(private readonly id: string, public name: string) {
     //this.id = id
     //this.name = n;
   }
 
+  //SINGLETON
   static createEmployee(name: string) {
     return {name: name};
   }
 
-  describe(this: Department) {
-    console.log("Department: " + this.name);
-  }
+  abstract describe(this: Department): void;
+  // {
+  //   //console.log("Department: " + this.name);
+  // }
 
   addEmployee(employee: string) {
     this.employees.push(employee);
@@ -34,22 +36,27 @@ class Department {
 }
 
 class ITDepartment extends Department {
+
   admins: string[];
   constructor(id : string, admins: string[]) {
     super(id, "IT"); //this needed to called first
     this.admins = admins;
   }
+
+  describe(this: Department): void {
+    throw new Error("Method not implemented.");
+  }
 }
 
-const accounting = new Department("d1", "Accounting");
+//const accounting = new Department("d1", "Accounting"); cannot instanciate abstract class
 
 // const copy = {name: 'copy', describe: accounting.describe};
 // copy.describe();
 
-accounting.addEmployee('Max');
-accounting.addEmployee('Kara');
-accounting.describe();
-accounting.printEmployeesDetail();
+// accounting.addEmployee('Max');
+// accounting.addEmployee('Kara');
+// accounting.describe();
+// accounting.printEmployeesDetail();
 
 const it = new ITDepartment("it", ['Max']);
 it.addEmployee('Au');
@@ -58,7 +65,12 @@ console.log(it.admins)
 
 
 class AccountingDepartment extends Department {
+  describe(this: Department): void {
+    throw new Error("Method not implemented.");
+  }
+
   private lastReport : string;
+  private static instance: AccountingDepartment;
 
   get mostRecentReport() {
     if (this.lastReport)
@@ -73,9 +85,18 @@ class AccountingDepartment extends Department {
     this.lastReport = value;
   }
 
-  constructor(id: string, private reports: string[]) {
+  private constructor(id: string, private reports: string[]) {
     super(id, 'AccountingDept');
     this.lastReport = reports[0];
+  }
+
+  static getInstance() {
+    if (AccountingDepartment.instance) {
+      return this.instance;
+    } else {
+      this.instance = new AccountingDepartment('d2', []);
+    }
+    return this.instance;
   }
 
   //override addEmployee of Department
@@ -96,7 +117,11 @@ class AccountingDepartment extends Department {
   }
 }
 
-const accountDept = new AccountingDepartment('d2', []);
+//const accountDept = new AccountingDepartment('d2', []);
+
+//singleton -> one object instanciate only
+const accountDept = AccountingDepartment.getInstance(); //instance one
+const accountDeptSame = AccountingDepartment.getInstance(); //get same one
 
 //console.log(accountDept.mostRecentReport); this will throw error
 accountDept.addReport('Something went wrong...');
@@ -110,3 +135,5 @@ console.log(accountDept.mostRecentReport);
 //testing static createEmployye
 const emp1 = Department.createEmployee('Whooo');
 console.log(emp1);
+
+
