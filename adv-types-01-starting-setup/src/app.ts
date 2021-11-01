@@ -24,6 +24,10 @@ type Numeric = number | boolean;
 
 type Universal = Combinable & Numeric;
 
+// FUNCTION overload
+// function overload need to be above main function
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
 function add(a: Combinable, b: Combinable) {
   if (typeof a === 'string' || typeof b === 'string') {
     return a.toString() + b.toString();
@@ -120,3 +124,35 @@ moveAnimal({type: 'bird', flyingSpeed: 30});
 const userInput = document.getElementById('user-input')! as HTMLInputElement;
 
 userInput.value = 'Hi there!'
+
+
+// INDEX properties
+interface ErrorContainer {
+  //ex: properties in this must is a string prop and type tring
+  [prop: string] : string; 
+}
+
+const errorBag : ErrorContainer = {
+  email: 'Not a valid email',
+  userName: 'Must start with a capital charcter!'
+}
+
+
+// Optional Chaining '?'
+const fetchedUserData = {
+  id: 'u1',
+  name: 'Au',
+  job: {title: 'CEO', description: 'My own company'}
+}
+console.log(fetchedUserData?.job?.title); //if fetch has data, execute job and if job is not null access title
+
+
+// NUllish Coalescing
+const userInputNull = null;
+const store = userInputNull ?? 'DEFAULT'; // if null or UNdefine use 'DEFAULT
+console.log(store)
+
+const userInputEmpty = '';
+const storeX = userInputEmpty ?? 'DEFAULT'; // this will have '' value output
+console.log(storeX)
+
